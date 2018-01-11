@@ -4,8 +4,6 @@ import random
 import time
 import hashlib
 import threading
-import logging
-
 
 headers = {
     "Origin":"http://www.inscripciones.uni.edu.pe",
@@ -51,7 +49,6 @@ def make_request():
         except ValueError:
             print("Error: retrying http post")
             time.sleep(2)
-
 Nhilos = 4
 hilos = []
 for i in range(Nhilos):
@@ -60,3 +57,5 @@ for i in range(Nhilos):
     hilos[i].start()
 for i in range(Nhilos):
     hilos[i].join()
+
+print("Proceso terminado :|")
