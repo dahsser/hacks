@@ -4,6 +4,7 @@ import random
 import time
 import hashlib
 import threading
+import urllib
 
 headers = {
     "Origin":"http://www.inscripciones.uni.edu.pe",
@@ -15,6 +16,9 @@ headers = {
     "Accept-Encoding":"gzip, deflate",
     "Accept-Language":"es-ES,es;q=0.9,en;q=0.8"
 }
+
+
+
 cont = 0
 def make_request():
     global cont
@@ -38,18 +42,23 @@ def make_request():
             'password_confirmation': password
         }
         try:
-            r = requests.post('http://www.inscripciones.uni.edu.pe/register', data = data, headers=headers, cookies=r.cookies)
+            r = requests.post('http://www.inscripciones.uni.edu.pe/register',
+                data = data,
+                headers = headers,
+                cookies = r.cookies
+                #proxies = urllib.request.getproxies()
+            )
             if r.status_code==200:
                 cont+=1
                 if cont%50==0:
                     print("\r{:d} requests enviados".format(cont),end='')
-                    time.sleep(0.200)
+                    time.sleep(2.500)
             else:
                 print("Error:", r.status_code)
         except ValueError:
             print("Error: retrying http post")
             time.sleep(2)
-Nhilos = 4
+Nhilos = 1
 hilos = []
 for i in range(Nhilos):
     hilos.append(threading.Thread(target=make_request))
