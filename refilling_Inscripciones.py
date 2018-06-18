@@ -4,7 +4,7 @@ import random
 import time
 headers = {
     "Origin":"http://www.inscripciones.uni.edu.pe",
-    "Upgrade-Insecure-Requests":1,
+    "Upgrade-Insecure-Requests":"1",
     "Content-Type":"application/x-www-form-urlencoded",
     "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36",
     "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
@@ -22,7 +22,7 @@ while True :
     soup = BeautifulSoup(text , features = "lxml").body
     token = soup.find_all('input')[0]['value']
     dni_str = "7"+str(random.randint(1000000,9999999)) # people from Peru now have a ID starting with 7
-    password = str(random.randint(100000,999999)) # Making difficult to find wich one is fake
+    password = str(random.randint(10000000,99999999)) # Making difficult to find wich one is fake
     data = {
         '_token':token,
         'dni': dni_str,
